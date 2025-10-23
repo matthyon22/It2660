@@ -1,103 +1,94 @@
-//import java.util.*;
-/*
- * IT-2660 - Lab 1
- * Matthew Yon: 
- */
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
-  public static void main(String[] args) {
-    System.out.println("hello, world!");
+    public static void main(String[] args) {
+      System.out.println("Unsorted Array ---------------------------------------------------");
+      ArrayList<Integer> integerList = Lab4.getList();
+      Lab4.outputList(integerList);
 
-    Lab1 lab = new Lab1();
+      System.out.println("\n\nBubble sort results ----------------------------------------------");
+      long startBubble = System.nanoTime();
+      ArrayList<Integer> bubbleSortedList = Lab4.bubbleSort(integerList);
+       long endBubble = System.nanoTime();
+      Lab4.outputList(bubbleSortedList);
+       System.out.println("\nBubble sort took: " + (endBubble - startBubble) / 1_000_000.0 + " ms");
 
+     
+      System.out.println("\n\nInsertion sort results -------------------------------------------");
+      long startInsertion = System.nanoTime();
+      ArrayList<Integer> insertionSortedList = Lab4.insertionSort(integerList);  
+      long endInsertion = System.nanoTime();
+      Lab4.outputList(insertionSortedList);
+     System.out.println("\nInsertion sort took: " + (endInsertion - startInsertion) / 1_000_000.0 + " ms");
     
-    int[] nums = {5, 9, 3, 12, 7, 3, 11, 5};
-
     
-    System.out.print("Array in order: ");
-    int i = 0;
-    while (i < nums.length) {
-      System.out.print(nums[i] + " ");
-      i++;
     }
-    System.out.println();
-
-    
-    System.out.print("Array in reverse: ");
-    for (int j = nums.length - 1; j >= 0; j--) {
-      System.out.print(nums[j] + " ");
-    }
-    System.out.println();
-
-    
-    System.out.println("First value: " + nums[0]);
-    System.out.println("Last value: " + nums[nums.length - 1]);
-
-   
-    System.out.println("Max of (8, 4): " + lab.max(8, 4));
-    System.out.println("Min of (8, 4): " + lab.min(8, 4));
-    System.out.println("Sum: " + lab.sum(nums));
-    System.out.println("Average: " + lab.average(nums));
-    System.out.println("Array Max: " + lab.max(nums));
-    System.out.println("Array Min: " + lab.min(nums));
-  }
 }
 
+class Lab4 {
+  public static ArrayList<Integer> insertionSort(ArrayList<Integer> integerList) {
+   ArrayList<Integer> sortedList = new ArrayList<>(integerList); 
 
-class Lab1 {
-  public int increment(int num) {
-    return ++num;
+    for (int i = 1; i < sortedList.size(); i++) {
+        int key = sortedList.get(i);
+        int j = i - 1;
+
+        
+        while (j >= 0 && sortedList.get(j) > key) {
+            sortedList.set(j + 1, sortedList.get(j));
+            j--;
+        }
+        sortedList.set(j + 1, key);
+    }
+
+    return sortedList;
+}
+
+    
+  
+
+  public static ArrayList<Integer> bubbleSort(ArrayList<Integer> integerList) {
+    
+    ArrayList<Integer> sortedList = new ArrayList<>(integerList); 
+        int n = sortedList.size();
+
+        
+        for (int i = 0; i < n - 1; i++) {
+            
+            for (int j = 0; j < n - i - 1; j++) {
+                if (sortedList.get(j) > sortedList.get(j + 1)) {
+                    
+                    int temp = sortedList.get(j);
+                    sortedList.set(j, sortedList.get(j + 1));
+                    sortedList.set(j + 1, temp);
+                }
+            }
+        }
+
+        return sortedList;
+    }
+    
+  
+
+  public static ArrayList<Integer> getList() {
+    ArrayList<Integer> integerList = new ArrayList<>();
+    String line;
+    try (BufferedReader br = new BufferedReader(new FileReader("integers.txt"))) {
+        while ((line = br.readLine()) != null) {
+            integerList.add(Integer.parseInt(line));
+        }
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+    return integerList;
   }
 
-  public int max(int a, int b) {
-    if (a > b) {
-      return a;
-    } else {
-      return b;
+  public static void outputList(ArrayList<Integer> integerList) {
+    for (int i = 0; i < integerList.size(); i++) {
+        System.out.print(integerList.get(i) + " ");
     }
-  }
-
-  public int min(int a, int b) {
-    if (a < b) {
-      return a;
-    } else {
-      return b;
-    }
-  }
-
-  public int sum(int[] nums) {
-    int total = 0;
-    for (int num : nums) {
-      total += num;
-    }
-    return total;
-  }
-
-  public double average(int[] nums) {
-    int total = 0;
-    for (int num : nums) {
-      total += num;
-    }
-    return (double) total / nums.length;
-  }
-
-  public int max(int[] nums) {
-    int maxVal = nums[0];
-    for (int i = 1; i < nums.length; i++) {
-      if (nums[i] > maxVal) {
-        maxVal = nums[i];
-      }
-    }
-    return maxVal;
-  }
-
-  public int min(int[] nums) {
-    int minVal = nums[0];
-    for (int i = 1; i < nums.length; i++) {
-      if (nums[i] < minVal) {
-        minVal = nums[i];
-      }
-    }
-    return minVal;
   }
 }
